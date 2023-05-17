@@ -1,0 +1,156 @@
+import roast.*;
+import java.util.*;
+
+public class SubstrCP {
+
+public static void main(String[] args)
+{
+	// character sequence used as fill pattern
+	char[] fill = {'a','b','c','d','e'};
+
+	final int MAXLENGTH = 10; // maximum length for base string
+
+	try {
+		Roast.parseArgs(null,args);
+		Roast.startUnitOps(
+			new Generate(MAXLENGTH),
+			new Filter(),
+			new Execute(fill),
+			new Check(fill));
+		Roast.printCounts();
+	} catch (ParameterException pe) {
+		System.out.println(pe.getMessage());
+	}
+}
+
+}
+
+// ********** Tuple **********
+
+class Tuple extends AbstractTuple {
+
+public Tuple(int n,int i,int j)
+{
+	this.n = n; this.i = i; this.j = j;
+}
+
+public String toString()
+{
+	return "(" + n + "," + i + "," + j + "," + s + ")";
+}
+
+public int n; // length of the StringBuffer
+public int i; // start position of the substring
+public int j; // end position of the substring
+public String s = null; // the String returned by substring
+
+}
+
+// ********** Generate **********
+
+class Generate extends GenerateUnitOp {
+
+public Generate(int maxLength)
+{
+	Vector dv = new Vector();
+	dv.addElement(new IntervalDomain(maxLength));
+	dv.addElement(new IntervalDomain(maxLength));
+	dv.addElement(new IntervalDomain(maxLength));
+	iterator = new CPIterator(dv);
+}
+
+public boolean hasMoreTuples()
+{
+	return iterator.hasNext();
+}
+
+public AbstractTuple nextTuple()
+{
+	Vector v = (Vector)iterator.next();
+	Tuple t = new Tuple(
+		((Integer)v.elementAt(0)).intValue(),
+		((Integer)v.elementAt(1)).intValue(),
+		((Integer)v.elementAt(2)).intValue());
+
+	Roast.logUtilityMessage("Generate:"+t,0);
+
+	return t;
+}
+
+private CPIterator iterator;
+
+}
+
+// ********** Filter **********
+
+class Filter extends FilterUnitOp {
+
+public boolean isValidTuple(AbstractTuple tuple)
+{
+	Tuple t = (Tuple)tuple;
+	Roast.logUtilityMessage("Filter:"+t,1);
+
+	return 0 <= t.i && t.i <= t.j && t.j <= t.n;
+}
+
+}
+
+// ********** Execute **********
+
+class Execute extends ExecuteUnitOp {
+ 
+public Execute(char[] fill)
+{
+	this.fill = fill;
+}
+
+public AbstractTuple executeTuple(AbstractTuple tuple)
+{
+	Tuple t = (Tuple)tuple;
+	Roast.logUtilityMessage("Execute:"+t,1);
+
+	// create and fill StringBuffer
+	StringBuffer s = new StringBuffer();
+	for (int i = 0; i < t.n; i++)
+		s.append(fill[i%fill.length]);
+
+	// extract substring
+	t.s = s.substring(t.i,t.j);
+
+	return t;
+}
+
+private char[] fill;
+
+}
+
+// ********** Check **********
+
+class Check extends CheckUnitOp {
+ 
+public Check(char[] fill)
+{
+	this.fill = fill;
+}
+
+public void checkTuple(AbstractTuple tuple)
+{
+	Tuple t = (Tuple)tuple;
+	Roast.logUtilityMessage("Check:"+t,1);
+
+	#valueCheck match(t.s,t.i%fill.length) # true #end
+}
+
+// check whether s matches the fill pattern, beginning at shift
+private boolean match(String s,int shift)
+{
+	for (int i = 0; i < s.length(); i++) {
+		if (s.charAt(i) != fill[(i+shift)%fill.length])
+			return false;
+	}
+	return true;
+}
+
+private char[] fill;
+
+}

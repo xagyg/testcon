@@ -1,0 +1,70 @@
+Roast README
+Installation
+     Note: This software has been tested with JDK 1.2 and 1.3 only
+     
+     1. Install Perl.
+        Roast uses Perl to parse the test scripts. A copy of Perl
+        can be downloaded for free from the ActivePerl website 
+        (http://www.activestate.com/Products/ActivePerl). Select the download
+        button and follow the instructions to install.
+     
+     2. Update the PATH and CLASSPATH variables:
+          To set the PATH and CLASSPATH permanently, set them 
+          as follows:
+               * For Windows 95 and 98, set the PATH and CLASSPATH in your
+                 autoexec.bat file.
+                 e.g.
+                    set PATH=<path to conan>\roast\bin;%PATH%
+                    set CLASSPATH=<path to conan>\roast;%$CLASSPATH%
+
+               * For Windows NT and 2000,
+                    PATH=<path to conan>\roast\bin;$PATH
+                    CLASSPATH=<path to conan>\roast;$CLASSPATH
+                    
+
+     4. Run test scripts to verify Roast installation.
+          
+          To test the Roast installation, you need to open a DOS prompt
+          as follows:
+               
+              On Windows 95, 98 and ME: 
+                
+              - Go to the "Start" menu and select "Run..."
+              - Type "command" into the text box
+              - Press "OK"
+              
+              On Windows NT and 2000:
+              
+              - Go to the "Start" menu and select "Run..."
+              - Type "cmd" into the text box
+              - Press "OK"
+                         
+              In the DOS window type the following:
+              
+                a) change directory to 'roast\installTest' underneath where you
+                   installed conan. For example, if you installed conan in
+                   d:\conan, you would type:
+              
+                    cd d:\conan\roast\installTest
+                
+                b) From the 'installTest' directory, type the following
+                   sequence of commands:
+              
+                      perl ..\bin\roast < Test.script > Test.java                    
+              
+                      javac Test.java
+              
+                      java Test -level 4 -logfile Test.actual
+              
+                      windiff Test.actual Test.expected
+                    
+            To check the Roast Log Message Viewer installation, execute the
+            following sequence of commands:
+          
+                perl roast < Test.script > Test.java
+              
+                javac Test.java
+              
+                java Test -level 4 -logfile Test.ser -serialize
+              
+                java roast.viewer.LogViewer Test.ser

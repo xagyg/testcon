@@ -1,0 +1,103 @@
+import roast.*;
+import java.util.*;
+
+public class Templates {
+
+public static void main(String[] args)
+{
+	String s;
+
+	// ***** value-checking templates
+	s = new String("abc");
+
+	// builtin types
+
+	#valueCheck s.length() # 3 #end // case V1: pass
+
+	#valueCheck s.length() # 0 #end // case V2: fail
+
+	#valueCheck s # "abc" #end // case V3: pass
+
+	// custom type: case-insensitive string comparison
+
+	#valueCheck s # "abc" #end // case V4: pass
+	#valueCheck s # "abc" # CIString #end // case V5: pass
+
+	#valueCheck s # "aBc" #end // case V6: fail
+	#valueCheck s # "aBc" # CIString #end // case V7: pass
+
+	// exception during comparison
+	#valueCheck s.charAt(-1) # 'a' #end // case V8: fail
+
+	// ***** exception-monitoring templates
+
+	// default comparison
+	char c;
+
+	#excMonitor c = s.charAt(0); #end // case E1: pass
+	#excMonitor c = s.charAt(-1); #end // case E2: fail
+
+	#excMonitor c = s.charAt(0); #
+		new StringIndexOutOfBoundsException() #end // case E3: fail
+	#excMonitor c = s.charAt(-1); #
+		new StringIndexOutOfBoundsException() #end // case E4: pass
+
+	// custom comparison
+
+	#excMonitor throw new E(1); # new E(2) #end // E5: pass
+
+	#excMonitor throw new E(1); # new E(2) # MyExcCompare #end // E6: fail
+
+	Roast.printCounts();
+}
+
+}
+
+// ***** case-insensitive string for testing custom value comparison
+class CIString extends ValueType {
+
+static public boolean compareValue(String actVal,String expVal)
+{ return actVal.equalsIgnoreCase(expVal); }
+
+static public void printValue(int lineNumber,String actVal,String expVal)
+{ ValueType.printValue(lineNumber,actVal,expVal); }
+
+}
+
+// ***** classes for testing custom exception comparison
+
+class E extends Exception {
+	public E(int x) { this.x = x; }
+	public int x;
+}
+
+class MyExcCompare {
+
+static public boolean compareExc(Object actExc,E expExc)
+{
+	if (!(actExc instanceof E)) {
+		return false;
+	} else if (expExc == null) {
+		return actExc == null;
+	} else {
+		return expExc.x == ((E)actExc).x;
+	}
+}
+
+static public void printExc(int lineNumber,Object actExc,E expExc)
+{
+	String expExc0,actExc0;
+
+	// test here: actExc instanceOf E; else print class name
+	actExc0 = actExc == null ? "<none>" : "E(" + ((E)actExc).x + ")";
+	expExc0 = expExc == null ? "<none>" : "E(" + expExc.x + ")";
+
+	Roast.logFailureMessage("Exception error at line number: " +
+		lineNumber +
+		".  Actual exception: "+actExc0 +
+		"  Expected exception: "+expExc0,
+		lineNumber);
+	Roast.excErrorCount++;
+}
+
+}
