@@ -1,0 +1,36 @@
+
+#monitor m ProducerConsumer 
+
+
+// (1) Test sending a simple send and receive
+#begin
+  #tick 
+    #thread  
+	    #excMonitor m.send("a"); #end
+	    #valueCheck time() # 1 #end 
+	#end
+  #end
+  #tick 
+    #thread 
+	    #valueCheck m.receive() # 'a' #end
+	    #valueCheck time() # 2 #end
+	#end
+  #end
+#end 
+
+// (2) Test a receiver waiting on the queue, then a sender sending
+#begin
+  #tick 
+    #thread  
+    	#valueCheck m.receive() # 'a' #end
+	    #valueCheck time() # 2 #end
+	#end
+  #end
+  #tick 
+    #thread  
+	    #excMonitor m.send("a"); #end  
+	    #valueCheck time() # 2 #end
+	#end
+  #end    
+#end
+
