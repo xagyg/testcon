@@ -1,0 +1,157 @@
+import roast.*;
+import java.util.*;
+
+public class AppendUnitOp {
+
+public static void main(String[] args)
+{
+	// character sequence used as fill pattern
+	char[] fill = {'a','b','c','d','e'};
+
+	final int MAXLENGTH = 10; // maximum length for base and append strings
+
+	try {
+		Roast.parseArgs(null,args);
+		Roast.startUnitOps(
+			new Generate(MAXLENGTH),
+			new Filter(),
+			new Execute(fill),
+			new Check(fill));
+		Roast.printCounts();
+	} catch (ParameterException pe) {
+		System.out.println(pe.getMessage());
+	}
+}
+
+}
+
+// ********** Tuple **********
+
+class Tuple extends AbstractTuple {
+
+public Tuple(int baseLength, int appendLength)
+{
+	this.baseLength = baseLength; this.appendLength = appendLength;
+}
+
+public String toString()
+{
+	return "(" + baseLength + "," + appendLength + "," + s + ")";
+}
+
+public int baseLength; // length of the "base" StringBuffer
+public int appendLength; // length of the StringBuffer to be appended
+public StringBuffer s = null; // the resulting StringBuffer
+
+}
+
+// ********** Generate **********
+
+class Generate extends GenerateUnitOp {
+
+public Generate(int maxLength)
+{
+	v = new Vector();
+	for (int baseLength = 0; baseLength < maxLength; baseLength++)
+		for (int appendLength = 0;
+		appendLength < maxLength;
+		appendLength++)
+			v.addElement(new Tuple(baseLength,appendLength));
+}
+
+public boolean hasMoreTuples()
+{
+	return v.size() > 0;
+}
+
+public AbstractTuple nextTuple()
+{
+	Tuple t = (Tuple)v.lastElement();
+	Roast.logUtilityMessage("Generate:"+t,0);
+
+	v.removeElementAt(v.size()-1);
+	return t;
+}
+
+private Vector v;
+
+}
+
+// ********** Filter **********
+
+class Filter extends FilterUnitOp {
+
+public boolean isValidTuple(AbstractTuple tuple)
+{
+	return true;
+}
+
+}
+
+// ********** Execute **********
+
+class Execute extends ExecuteUnitOp {
+
+public Execute(char[] fill)
+{
+	this.fill = fill;
+}
+
+public AbstractTuple executeTuple(AbstractTuple tuple)
+{
+	Tuple t = (Tuple)tuple;
+	Roast.logUtilityMessage("Execute:"+t,1);
+
+	// create and fill "base" StringBuffer
+	t.s = new StringBuffer();
+	for (int i = 0; i < t.baseLength; i++)
+		t.s.append(fill[i%fill.length]);
+
+	// create and fill "append" StringBuffer
+	StringBuffer tmp = new StringBuffer();
+	for (int i = 0; i < t.appendLength; i++)
+		tmp.append(fill[i%fill.length]);
+	
+	t.s.append(tmp);
+
+	return t;
+}
+
+private char[] fill;
+
+}
+
+// ********** Check **********
+
+class Check extends CheckUnitOp {
+
+public Check(char[] fill)
+{
+	this.fill = fill;
+}
+
+public void checkTuple(AbstractTuple tuple)
+{
+	Tuple t = (Tuple)tuple;
+	Roast.logUtilityMessage("Check:"+t,1);
+
+	// check portion from "base" StringBuffer
+	#valueCheck match(t.s,0,t.baseLength-1) # true #end
+
+	// check portion from StringBuffer that was appended
+	#valueCheck match(t.s,t.baseLength,t.appendLength-1) # true #end
+}
+
+// check whether s[start..end] matches the fill pattern
+private boolean match(StringBuffer s,int start,int end)
+{
+	for (int i = start; i <= end; i++) {
+		if (s.charAt(i) != fill[(i-start)%fill.length])
+			return false;
+	}
+	return true;
+}
+
+private char[] fill;
+
+}

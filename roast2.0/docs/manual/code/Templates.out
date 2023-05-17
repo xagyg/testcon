@@ -1,0 +1,9 @@
+Value error at line number: 17.  Actual value: 3  Expected value: 0
+Value error at line number: 26.  Actual value: abc  Expected value: aBc
+Exception error at line number: 30.  Actual exception: java.lang.StringIndexOutOfBoundsException  Expected exception: <none>
+Exception error at line number: 38.  Actual exception: java.lang.StringIndexOutOfBoundsException  Expected exception: <none>
+Exception error at line number: 40.  Actual exception: <none>  Expected exception: java.lang.StringIndexOutOfBoundsException
+Exception error at line number: 49.  Actual exception: E(1)  Expected exception: E(2)
+***** Test cases: 14
+***** Value errors: 2
+***** Exception errors: 4
