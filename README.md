@@ -24,7 +24,7 @@ SIX STEPS TO SET UP CONAN
    a command prompt. Go to the ConAn home directory (i.e. where ConAn was
    installed):
 
-   $ cd samples
+   $ cd samples<br>
    $ conan TestDriver
 
 6. To execute the driver:
