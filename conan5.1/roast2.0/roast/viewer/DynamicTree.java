@@ -110,8 +110,16 @@ void setLevelVisible(int level)
 
 
 class MyRenderer extends DefaultTreeCellRenderer {
-ImageIcon failureIcon = new ImageIcon("roast/viewer/failureMessage.gif");
-ImageIcon utilityIcon = new ImageIcon("roast/viewer/utilityMessage.gif");
+ImageIcon failureIcon = loadIcon("failureMessage.gif");
+ImageIcon utilityIcon = loadIcon("utilityMessage.gif");
+
+	// Load from the classpath (classes/roast/viewer) so the viewer works from any directory;
+	// fall back to the old path relative to the current directory.
+	private static ImageIcon loadIcon(String name) {
+		java.net.URL url = MyRenderer.class.getResource(name);
+		return url != null ? new ImageIcon(url) : new ImageIcon("roast/viewer/" + name);
+	}
+
 	public Component getTreeCellRendererComponent(
 		JTree tree, Object value, boolean sel,
 		boolean expanded, boolean leaf, int row,

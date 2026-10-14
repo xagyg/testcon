@@ -14,13 +14,18 @@ Installation
                * For Windows 95 and 98, set the PATH and CLASSPATH in your
                  autoexec.bat file.
                  e.g.
-                    set PATH=<path to conan>\roast\bin;%PATH%
-                    set CLASSPATH=<path to conan>\roast;%$CLASSPATH%
+                    set PATH=<path to conan>\roast2.0\bin;%PATH%
+                    set CLASSPATH=<path to conan>\roast2.0\classes;%CLASSPATH%
 
                * For Windows NT and 2000,
-                    PATH=<path to conan>\roast\bin;$PATH
-                    CLASSPATH=<path to conan>\roast;$CLASSPATH
+                    PATH=<path to conan>\roast2.0\bin;$PATH
+                    CLASSPATH=<path to conan>\roast2.0\classes;$CLASSPATH
                     
+
+     3. Compile Roast.
+          Roast is compiled into the "classes" directory by ConAn's build
+          script (conan5.1/bin/build, after running setenv). ConAn also
+          builds it automatically the first time you run "conan".
 
      4. Run test scripts to verify Roast installation.
           
@@ -41,11 +46,11 @@ Installation
                          
               In the DOS window type the following:
               
-                a) change directory to 'roast\installTest' underneath where you
+                a) change directory to 'roast2.0\installTest' underneath where you
                    installed conan. For example, if you installed conan in
                    d:\conan, you would type:
               
-                    cd d:\conan\roast\installTest
+                    cd d:\conan\roast2.0\installTest
                 
                 b) From the 'installTest' directory, type the following
                    sequence of commands:
@@ -61,7 +66,7 @@ Installation
             To check the Roast Log Message Viewer installation, execute the
             following sequence of commands:
           
-                perl roast < Test.script > Test.java
+                perl ..\bin\roast < Test.script > Test.java
               
                 javac Test.java
               

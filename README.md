@@ -20,6 +20,10 @@ SIX STEPS TO SET UP CONAN
    If you set these environment variables permanently you will not have to
    execute "setenv" each time you open a command shell to use ConAn.
 
+   ConAn and Roast are compiled into "classes" directories the first time you
+   run "conan". If you change any ConAn or Roast source file, run "build" to
+   recompile.
+
 5. To generate a driver for the TestDriver.conan test script, open
    a command prompt. Go to the ConAn home directory (i.e. where ConAn was
    installed):
