@@ -6,11 +6,11 @@ Installation
           To set the PATH and CLASSPATH permanently, set them in
           your startup file.
                * For C shell (csh), edit the startup file (~/.cshrc):
-                    setenv PATH <path to conan>/roast/bin:$PATH
-                    setenv CLASSPATH <path to conan>/roast:$CLASSPATH
+                    setenv PATH <path to conan>/roast2.0/bin:$PATH
+                    setenv CLASSPATH <path to conan>/roast2.0/classes:$CLASSPATH
                * For ksh, bash or sh, edit the profile file (~/.profile):
-                    PATH=<path to conan>/roast/bin:$PATH
-                    CLASSPATH=<path to conan>/roast:$CLASSPATH
+                    PATH=<path to conan>/roast2.0/bin:$PATH
+                    CLASSPATH=<path to conan>/roast2.0/classes:$CLASSPATH
           Then load the startup file and verify that the path is set:
                * For C shell (csh):
                     % source ~/.cshrc
@@ -19,17 +19,22 @@ Installation
                     $ . $HOME/.profile
                     $ which roast
 
+     3. Compile Roast.
+          Roast is compiled into the "classes" directory by ConAn's build
+          script (conan5.1/bin/build, after running setenv). ConAn also
+          builds it automatically the first time you run "conan".
+
      4. Run test scripts to verify Roast installation. 
      
           To test the Roast installation, execute:
-              % cd roast/installTest
+              % cd roast2.0/installTest
               % roast < Test.script > Test.java
               % javac Test.java
               % java Test -level 4 -logfile Test.actual
               % diff Test.actual Test.expected  
               
           To check the Roast Log Message Viewer installation, execute:
-              % cd roast/installTest
+              % cd roast2.0/installTest
               % roast < Test.script > Test.java
               % javac Test.java
               % java Test -level 4 -logfile Test.ser -serialize

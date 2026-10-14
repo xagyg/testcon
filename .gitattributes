@@ -1,0 +1,4 @@
+# Keep script line endings correct regardless of git autocrlf settings
+*.sh text eol=lf
+*.bat text eol=crlf
+conan5.1/roast2.0/bin/roast text eol=lf
