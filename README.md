@@ -12,11 +12,16 @@ SIX STEPS TO SET UP CONAN
 2. Ensure Perl is installed on your system.
    You can check this by typing "perl -version" at the command prompt.
 
-3. Go to the "bin" directory and customize "setenv.bat"
-   (or .sh equivalent as applicable).
+3. setenv works out where ConAn is installed, so it needs no editing.
+   It sets CONAN_HOME, ROAST_HOME, PATH and CLASSPATH for the current window.
 
-4. Open a command prompt and execute "setenv" (or already have these
-   environment variables set).
+4. From the ConAn home directory (conan5.1), run the setenv for your shell
+   (or already have these environment variables set):
+
+     cmd:          bin\setenv
+     PowerShell:   .\bin\setenv.ps1
+     bash:         . bin/setenv.sh
+
    If you set these environment variables permanently you will not have to
    execute "setenv" each time you open a command shell to use ConAn.
 
